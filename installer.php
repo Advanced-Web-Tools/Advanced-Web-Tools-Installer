@@ -1,8 +1,15 @@
 <?php
+error_reporting(E_ERROR);
+
 
 // $opDir = __DIR__.DIRECTORY_SEPARATOR."testing".DIRECTORY_SEPARATOR;
 
 $opDir = __DIR__.DIRECTORY_SEPARATOR;
+
+if(isset($_POST['download'])){
+    if(!file_exists("installer.zip")) file_put_contents("installer.zip", fopen("https://github.com/ElStefanos/Advanced-Web-Tools/releases/download/latest/release.zip", 'r'));
+    echo "OK";
+} 
 
 if (isset($_POST['test_database'])) {
     $db_host = $_POST['dbHost'];
@@ -37,15 +44,15 @@ if (isset($_POST['test_database'])) {
 
                 $conn->multi_query($sql);
 
-                echo json_encode("OK");
+                echo "OK";
             } else {
-                echo json_encode("FAIL");
+                echo "FAIL: Unable to extract newest version";
             }
         } else {
-            echo json_encode("FAIL");
+            echo "FAIL: Wrong parameters. " . $mysql->connect_error;
         }
     } catch (Exception $e) {
-        echo json_encode("FAIL");
+        echo "FAIL: Unable to create connection to database." . $e;
     }
 }
 
@@ -55,10 +62,12 @@ if(isset($_POST['set_info'])) {
 
     $config_file = $opDir."awt-config.php";
 
-    readFileReplaceLine($config_file, 'define("WEB_NAME", "");', 'define("WEB_NAME", "'.$name.'");');
+    readFileReplaceLine($config_file, "define('WEB_NAME', \"\");", 'define("WEB_NAME", "'.$name.'");');
+    readFileReplaceLine($config_file, "define(\"WEB_NAME\", \"\");", 'define("WEB_NAME", "'.$name.'");');
     readFileReplaceLine($config_file, 'define("CONTACT_EMAIL", "");', 'define("CONTACT_EMAIL", "'.$contact.'");');
-    readFileReplaceLine($config_file, 'define("AWT_VERSION", "");', 'define("AWT_VERSION", "23.7a");');
+    readFileReplaceLine($config_file, 'define("AWT_VERSION", "");', 'define("AWT_VERSION", "v24.2.2");');
 
+    echo "OK";
 }
 
 if(isset($_POST["create_acc"])) {
@@ -82,6 +91,8 @@ if(isset($_POST["create_acc"])) {
     ('$email','$username','$fname','$lname','127.0.0.1','$password','$token','0')");
 
     clean();
+
+    echo "OK";
 }
 
 
@@ -101,6 +112,12 @@ function readFileReplaceLine(string $file, string $old_content, string $new_cont
 function clean() {
     unlink('installer.zip');
     unlink('database-awt.sql');
+    unlink('circle-check-regular.svg');
+    unlink('circle-xmark-regular.svg');
+    unlink('download-solid.svg');
+    unlink('triangle-exclamation-solid.svg');
     unlink('pexels-mo-eid-12324196.jpg');
     unlink('style.css');
+    unlink('logo.png');
 }
+

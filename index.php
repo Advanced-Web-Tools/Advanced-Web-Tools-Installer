@@ -11,16 +11,24 @@
 </head>
 
 <body>
-    <div class="wrapper">
+    <div class="notifier">
 
+    </div>
+    <div class="wrapper shadow">
+        <div class="branding">
+            <img src="./logo.png" alt="" srcset="">
+        </div>
         <div class="section-1">
             <div class="header">
                 <h1>Welcome to AWT Installer!</h1>
             </div>
             <div class="actions">
-                <p>Here we will guide you through install process.</p>
+                <p>Here we will guide you through installation process.</p>
+                <p>This installer will automatically download and install <br>newest version of AWT.</p>
                 <p>Lets begin!</p>
-                <button onclick="replaceSection('.section-1', '.section-2')">Next</button>
+                <div class="buttons">
+                    <button onclick="beginDownload('.section-1', '.section-2')">Next</button>
+                </div>
             </div>
         </div>
         <div class="section-2 hidden">
@@ -48,7 +56,7 @@
             <div class="actions">
 
                 <input type="text" placeholder="Website name" class="website_name" />
-                <input type="email" placeholder="Your contact" class="website_contact" />
+                <input type="email" placeholder="Your email address" class="website_contact" />
 
                 <div class="buttons">
                     <button onclick="replaceSection('.section-3', '.section-2')">Previous</button>
@@ -58,7 +66,7 @@
         </div>
         <div class="section-4 hidden">
             <div class="header">
-                <h1>Lets create first Admin account!</h1>
+                <h1>Lets create an Admin Account for you!</h1>
             </div>
             <div class="actions">
                 <input type="text" placeholder="Firstname" class="admin_firstname" />
@@ -73,12 +81,38 @@
                 </div>
             </div>
         </div>
+
+        <div class="section-5 hidden">
+            <div class="header">
+                <img src="./circle-check-regular.svg" width="100px"
+                    style="filter: invert(38%) sepia(85%) saturate(1638%) hue-rotate(92deg) brightness(104%) contrast(109%);">
+                <p>Thank you for installing Advanced Web Tools CMS!</p>
+                <p>You can access the dashboard by clicking <a href="./awt-admin/">here</a>.</p>
+                <p>To see your website click refresh.</p>
+            </div>
+            <div class="actions">
+                <div class="buttons">
+                    <button onclick="location.reload(true);">Refresh</button>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 
 </html>
 
 <script>
+
+    var regexSimpleEmail = /@/;
+
+    function validateEmail(email_val, emailRegex) {
+        if (emailRegex.test(email_val)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
 
     function replaceSection(oldSection, newSection) {
         $(newSection).removeClass("hidden");
@@ -95,6 +129,22 @@
         var dbUser = $(".db-user").val();
         var dbPass = $(".db-password").val();
         var dbName = $(".db-name").val();
+
+        if (!validateEmail(email, regexSimpleEmail)) {
+            $(".notifier").html("<img src='circle-xmark-regular.svg'><p>Email address must be valid!</p>");
+            setTimeout(() => {
+                $(".notifier").html(" ");
+            }, 5000);
+            return;
+        }
+
+        if (fname === "" || lname === "" || name === "" || email === "" || password === "" || dbHost === "" || dbUser === "" || dbName === "") {
+            $(".notifier").html("<img src='circle-xmark-regular.svg'><p>All fields are requried!</p>");
+            setTimeout(() => {
+                $(".notifier").html(" ");
+            }, 5000);
+            return;
+        }
 
         var data = {
             fname: fname,
@@ -117,20 +167,42 @@
             success: function (response) {
 
                 console.log(response);
+                if (response == 'OK') {
+                    replaceSection(oldSection, newSection);
+                }
             },
             error: function (xhr, status, error) {
-
+                $(".notifier").html("<img src='triangle-exclamation-solid.svg'><p>An error has occured while communicating with backend. See console log for more.</p>");
+                console.log(response);
+                setTimeout(() => {
+                    $(".notifier").html(" ");
+                }, 5000);
                 console.error("Error:", error);
             }
         });
-
-        replaceSection(oldSection, newSection);
     }
 
     function setInfo(oldSection, newSection) {
         var name = $(".website_name").val();
         var contact = $(".website_contact").val();
         $('.admin_email').val(contact);
+
+        if (!validateEmail(contact, regexSimpleEmail)) {
+            $(".notifier").html("<img src='circle-xmark-regular.svg'><p>Email address must be valid!</p>");
+            setTimeout(() => {
+                $(".notifier").html(" ");
+            }, 5000);
+            return;
+        }
+
+        if (name === "" || contact === "") {
+            $(".notifier").html("<img src='circle-xmark-regular.svg'><p>All fields are requried!</p>");
+            setTimeout(() => {
+                $(".notifier").html(" ");
+            }, 5000);
+
+            return;
+        }
 
         var data = {
             web_name: name,
@@ -146,15 +218,23 @@
                 // Request completed successfully
                 // You can handle the response here if needed
                 console.log(response);
+                if (response == 'OK') {
+                    replaceSection(oldSection, newSection);
+                }
             },
             error: function (xhr, status, error) {
-                // Request failed
+                $(".notifier").html("<img src='triangle-exclamation-solid.svg'><p>An error has occured while communicating with backend. See console log for more.</p>");
+                console.log(response);
+                setTimeout(() => {
+                    $(".notifier").html(" ");
+                }, 5000);
                 console.error("Error:", error);
+
             }
         });
 
         // If you need to replace the section, you can call the function here
-        replaceSection(oldSection, newSection);
+
     }
 
 
@@ -178,19 +258,72 @@
             url: "./installer.php",
             type: "POST",
             data: data,
-            success: function (response) {
+            success: function (response, status) {
                 // Request completed successfully
                 // You can handle the response here if needed
                 console.log(response);
+                if (response == 'OK') {
+                    replaceSection(oldSection, newSection);
+                } else {
+                    $(".notifier").html("<img src='triangle-exclamation-solid.svg'><p>An error has occured while connecting to database. See console log for more.</p>");
+                    console.log(response);
+                    setTimeout(() => {
+                        $(".notifier").html(" ");
+                    }, 5000);
+                }
             },
             error: function (xhr, status, error) {
-                // Request failed
+                $(".notifier").html("<img src='triangle-exclamation-solid.svg'><p>An error has occured while communicating with backend. See console log for more.</p>");
+                console.log(response);
+                setTimeout(() => {
+                    $(".notifier").html(" ");
+                }, 5000);
                 console.error("Error:", error);
             }
         });
 
-        // If you need to replace the section, you can call the function here
-        replaceSection(oldSection, newSection);
+
+    }
+
+
+    function beginDownload(oldSection, newSection) {
+
+        var data = {
+            download: "1"
+        };
+
+        $(".notifier").html("<img src='download-solid.svg' style='filter: invert(43%) sepia(25%) saturate(2988%) hue-rotate(150deg) brightness(104%) contrast(101%);'><p>Downloading latest version of AWT...</p>");
+
+        $.ajax({
+            url: "./installer.php",
+            type: "POST",
+            data: data,
+            success: function (response) {
+                if (response == 'OK') {
+                    replaceSection(oldSection, newSection);
+                    $(".notifier").html("<img src='circle-check-regular.svg' style='filter: invert(38%) sepia(85%) saturate(1638%) hue-rotate(92deg) brightness(104%) contrast(109%);'><p>Download was succesfull!</p>");
+                    console.log(response);
+                    setTimeout(() => {
+                        $(".notifier").html(" ");
+                    }, 5000);
+                } else {
+                    $(".notifier").html("<img src='circle-xmark-regular.svg'><p>Failed to download latest version of AWT.</p>");
+                    console.log(response);
+                    setTimeout(() => {
+                        $(".notifier").html(" ");
+                    }, 5000);
+                }
+            },
+            error: function (xhr, status, error) {
+                // Request failed
+                console.error("Error:", error);
+                $(".notifier").html("<img src='circle-xmark-regular.svg'><p>Failed to download latest version of AWT.</p>");
+                console.log(response);
+                setTimeout(() => {
+                    $(".notifier").html(" ");
+                }, 5000);
+            }
+        });
     }
 
 
