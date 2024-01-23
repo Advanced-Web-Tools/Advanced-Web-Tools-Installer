@@ -116,7 +116,6 @@ function clean() {
     unlink('circle-xmark-regular.svg');
     unlink('download-solid.svg');
     unlink('triangle-exclamation-solid.svg');
-    unlink('pexels-mo-eid-12324196.jpg');
     unlink('style.css');
     unlink('logo.png');
 }
