@@ -1,11 +1,4 @@
--- phpMyAdmin SQL Dump
--- version 5.2.1deb1ubuntu1
--- https://www.phpmyadmin.net/
---
--- Host: localhost:3306
--- Generation Time: Jan 22, 2024 at 09:38 PM
--- Server version: 8.0.35-0ubuntu0.23.10.1
--- PHP Version: 8.2.10-2ubuntu1
+
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -101,7 +94,7 @@ CREATE TABLE IF NOT EXISTS `awt_menus` (
   `items` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `active` int NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `awt_menus`
@@ -156,7 +149,7 @@ CREATE TABLE IF NOT EXISTS `awt_password_reset` (
   `expires` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
   `status` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -172,7 +165,7 @@ CREATE TABLE IF NOT EXISTS `awt_plugins` (
   `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `status` int NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -187,7 +180,7 @@ CREATE TABLE IF NOT EXISTS `awt_settings` (
   `required_permission_level` int NOT NULL DEFAULT '0',
   `category` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'Miscellaneous',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `awt_settings`
@@ -203,7 +196,7 @@ INSERT IGNORE INTO `awt_settings` (`id`, `name`, `value`, `required_permission_l
 (7, 'hostname_path', '/', 0, 'General'),
 (10, 'Enable API', 'true', 0, 'Security'),
 (11, 'API request whitelist', '*', 0, 'Security'),
-(13, 'PHP Error reporting', '0', 1, 'Security');
+(13, 'PHP Error reporting', '1', 1, 'Security');
 
 -- --------------------------------------------------------
 
@@ -257,7 +250,24 @@ CREATE TABLE IF NOT EXISTS `awt_theme_settings` (
   `value` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `awt_attention`
+--
+
+CREATE TABLE IF NOT EXISTS `awt_attention` (
+  `id` INT NOT NULL AUTO_INCREMENT ,
+  `caller` VARCHAR(255) NOT NULL ,
+  `reason` VARCHAR(255) NOT NULL ,
+  `solved` BOOLEAN NOT NULL DEFAULT FALSE ,
+  PRIMARY KEY (`id`)
+) ENGINE = InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci; 
+
 COMMIT;
+
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
