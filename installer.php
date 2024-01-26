@@ -66,7 +66,7 @@ if(isset($_POST['set_info'])) {
     readFileReplaceLine($config_file, "define(\"WEB_NAME\", \"\");", 'define("WEB_NAME", "'.$name.'");');
     readFileReplaceLine($config_file, 'define("CONTACT_EMAIL", "");', 'define("CONTACT_EMAIL", "'.$contact.'");');
     readFileReplaceLine($config_file, 'define("AWT_VERSION", "");', 'define("AWT_VERSION", "v24.2.2");');
-
+    readFileReplaceLine($config_file, 'define(\'AWT_VERSION\', "");', 'define("AWT_VERSION", "v24.2.2");');
     echo "OK";
 }
 
