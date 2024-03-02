@@ -83,6 +83,26 @@
         </div>
 
         <div class="section-5 hidden">
+        <div class="header">
+                <h1>One last thing...</h1>
+
+                <p>If your website is installed under specific directory please write it below.</p>
+                <p>You can determine this by looking at URL of this installer.</p>
+                <p>If you see a pattern like this "https://yoursite.com/[something]/".<br> There is a chance that you installed AWT in some directory.</p>
+                <p>Default value is "/".</p>
+
+            </div>
+            <div class="actions">
+                <input type="text" placeholder="Path to site directory" class="path_to_dir" value="/"/>
+                <div class="buttons">
+                    <button onclick="replaceSection('.section-5', '.section-4')">Previous</button>
+                    <button onclick="editPath('.section-5', '.section-6');">Next</button>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="section-6 hidden">
             <div class="header">
                 <img src="./circle-check-regular.svg" width="100px"
                     style="filter: invert(38%) sepia(85%) saturate(1638%) hue-rotate(92deg) brightness(104%) contrast(109%);">
@@ -157,6 +177,46 @@
             dbPass: dbPass,
             dbName: dbName,
             create_acc: "1"
+        };
+
+
+        $.ajax({
+            url: "./installer.php",
+            type: "POST",
+            data: data,
+            success: function (response) {
+
+                console.log(response);
+                if (response == 'OK') {
+                    replaceSection(oldSection, newSection);
+                }
+            },
+            error: function (xhr, status, error) {
+                $(".notifier").html("<img src='triangle-exclamation-solid.svg'><p>An error has occured while communicating with backend. See console log for more.</p>");
+                console.log(response);
+                setTimeout(() => {
+                    $(".notifier").html(" ");
+                }, 5000);
+                console.error("Error:", error);
+            }
+        });
+    }
+
+
+    function editPath(oldSection, newSection) {
+        var path = $(".path_to_dir").val();
+        var dbHost = $(".db-host").val();
+        var dbUser = $(".db-user").val();
+        var dbPass = $(".db-password").val();
+        var dbName = $(".db-name").val();
+
+
+        var data = {
+            dbHost: dbHost,
+            dbUser: dbUser,
+            dbPass: dbPass,
+            dbName: dbName,
+            edit_path: path
         };
 
 
