@@ -2,9 +2,9 @@
 error_reporting(E_ERROR);
 
 
-$opDir = __DIR__ . DIRECTORY_SEPARATOR . "test" . DIRECTORY_SEPARATOR;
+// $opDir = __DIR__ . DIRECTORY_SEPARATOR . "test" . DIRECTORY_SEPARATOR;
 
-// $opDir = __DIR__.DIRECTORY_SEPARATOR;
+$opDir = __DIR__.DIRECTORY_SEPARATOR;
 
 
 if (isset($_POST['download'])) {
@@ -123,7 +123,7 @@ if(isset($_POST['edit_path'])) {
     echo "OK";
 
 
-    // clean();
+    clean();
 }
 
 
@@ -191,7 +191,7 @@ function removeDir(string $dir): void {
 
 function clean()
 {
-    rmdir("img");
-    // unlink("installer.php");
+    removeDir("img");
+    unlink("installer.php");
 }
 
