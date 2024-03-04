@@ -175,14 +175,23 @@ function readFileReplaceLine(string $file, string $old_content, string $new_cont
 }
 
 
+function removeDir(string $dir): void {
+    $it = new RecursiveDirectoryIterator($dir, RecursiveDirectoryIterator::SKIP_DOTS);
+    $files = new RecursiveIteratorIterator($it,
+                 RecursiveIteratorIterator::CHILD_FIRST);
+    foreach($files as $file) {
+        if ($file->isDir()){
+            rmdir($file->getPathname());
+        } else {
+            unlink($file->getPathname());
+        }
+    }
+    rmdir($dir);
+}
+
 function clean()
 {
-    unlink('installer.zip');
-    unlink('circle-check-regular.svg');
-    unlink('circle-xmark-regular.svg');
-    unlink('download-solid.svg');
-    unlink('triangle-exclamation-solid.svg');
-    unlink('style.css');
-    unlink('logo.png');
+    removeDir("img");
+    unlink("installer.php");
 }
 
