@@ -2,9 +2,9 @@
 error_reporting(E_ERROR);
 
 
-// $opDir = __DIR__ . DIRECTORY_SEPARATOR . "test" . DIRECTORY_SEPARATOR;
+$opDir = __DIR__ . DIRECTORY_SEPARATOR . "test" . DIRECTORY_SEPARATOR;
 
-$opDir = __DIR__.DIRECTORY_SEPARATOR;
+// $opDir = __DIR__.DIRECTORY_SEPARATOR;
 
 
 if (isset($_POST['download'])) {
@@ -123,7 +123,7 @@ if(isset($_POST['edit_path'])) {
     echo "OK";
 
 
-    clean();
+    // clean();
 }
 
 
@@ -175,14 +175,23 @@ function readFileReplaceLine(string $file, string $old_content, string $new_cont
 }
 
 
+function removeDir(string $dir): void {
+    $it = new RecursiveDirectoryIterator($dir, RecursiveDirectoryIterator::SKIP_DOTS);
+    $files = new RecursiveIteratorIterator($it,
+                 RecursiveIteratorIterator::CHILD_FIRST);
+    foreach($files as $file) {
+        if ($file->isDir()){
+            rmdir($file->getPathname());
+        } else {
+            unlink($file->getPathname());
+        }
+    }
+    rmdir($dir);
+}
+
 function clean()
 {
-    unlink('installer.zip');
-    unlink('circle-check-regular.svg');
-    unlink('circle-xmark-regular.svg');
-    unlink('download-solid.svg');
-    unlink('triangle-exclamation-solid.svg');
-    unlink('style.css');
-    unlink('logo.png');
+    rmdir("img");
+    // unlink("installer.php");
 }
 
